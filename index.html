@@ -21,13 +21,14 @@
             border: 1px solid #e2e2e2;
             border-radius: 5px;
             padding: 15px;
+            width: 75vw;
             margin-bottom: 10px;
         }
         .answer {
             font-weight: 800;
         }
         #search{
-            width: 100%;
+            width: 76vw;
             margin-bottom: 15px;
             padding: 5px;
         }
@@ -42,7 +43,7 @@
 </head>
 <body>
     <input type="text" id="search" name="search" required  minlength="4">
-
+    <div id="prompt"></div>
     {{range .Questions}}
         <div class="question">
             <div class="question-text">{{.QuestionText}}</div>
@@ -57,22 +58,51 @@
     {{end}}
     <script>
         let searchInputFocused = false;
+        let prompt = document.getElementById("prompt");
         let questions = Array.from( document.getElementsByClassName("question-text") );
         let searchInput = document.getElementById("search");
-        
+        let wordSet = new Set();
+        let promptChilds = [];
         searchInput.addEventListener('input', function (evt) {
             let regexp = new RegExp('^'+this.value, 'i');
-            questions.map(function(q) {
-                if (regexp.test(q.innerText) || regexp == "^"){
-                    // q.style.display = "flex";
-                    q.parentElement.classList.remove('hidden');
-                    q.parentElement.classList.add('visible');
+            let search = this.value;
+            let spaceLast = new RegExp(/\s+\S*$/);
+            if (spaceLast.test(this.value)){
+                while (prompt.firstChild) {
+                    prompt.firstChild.remove()
 
+                }
+
+            }
+            questions.map(function(q) {
+                let parent = q.parentElement;
+                if (regexp.test(q.innerText) || regexp == "^"){
+                    parent.classList.remove('hidden');
+                    parent.classList.add('visible');
+
+                    let wordsSlice = q.innerText.split(" ");
+
+                    console.log(search, typeof(search));
+                    let searchWordsNum = search.split(" ").length;
+
+                    wordSet.add(wordsSlice[searchWordsNum]);
+
+
+                    if (regexp == "^"){
+                        wordSet.clear();
+                        promptChilds = [];
+                    }
                     return;
                 }
-                q.parentElement.classList.remove('visible');
-                q.parentElement.classList.add('hidden');
+                parent.classList.remove('visible');
+                parent.classList.add('hidden');
             });
+            for (let word of wordSet) {
+                let div = document.createElement("div");
+                div.innerText = word+"1";
+                prompt.appendChild(div);
+            }
+            wordSet.clear();
         });
 
 
