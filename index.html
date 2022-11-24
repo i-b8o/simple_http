@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Б.7.1</title>
+    <style>
+        body {
+          background-color: #f0f0f0;
+          margin: 10vw;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        p {
+            margin-bottom: 2px;
+        }
+        .question {
+            background-color: #eaeaea;
+            border: 1px solid #e2e2e2;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        .answer {
+            font-weight: 800;
+        }
+        #search{
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 5px;
+        }
+        .hidden{
+            display: none;
+        }
+        .visible {
+            display: block;
+        }
+    </style>
+        
+</head>
+<body>
+    <input type="text" id="search" name="search" required  minlength="4">
+
+    {{range .Questions}}
+        <div class="question">
+            <div class="question-text">{{.QuestionText}}</div>
+            <ul>
+                {{range.Options}}
+                <li>{{.}}</li>
+                {{end}}
+            </ul>
+            <p>Ответ:</p>
+            <div class="answer">{{.AnswerText}}</div>
+        </div>
+    {{end}}
+    <script>
+        let searchInputFocused = false;
+        let questions = Array.from( document.getElementsByClassName("question-text") );
+        let searchInput = document.getElementById("search");
+        
+        searchInput.addEventListener('input', function (evt) {
+            let regexp = new RegExp('^'+this.value, 'i');
+            questions.map(function(q) {
+                if (regexp.test(q.innerText) || regexp == "^"){
+                    // q.style.display = "flex";
+                    q.parentElement.classList.remove('hidden');
+                    q.parentElement.classList.add('visible');
+
+                    return;
+                }
+                q.parentElement.classList.remove('visible');
+                q.parentElement.classList.add('hidden');
+            });
+        });
+
+
+    </script> 
+</body>
+</html>
