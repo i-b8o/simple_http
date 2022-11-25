@@ -50,6 +50,11 @@
             margin-bottom: 15px;
             padding: 5px;
         }
+        #counter{
+            position: relative;
+            left: 10px;
+            margin-bottom: 10px;
+        }
         .hidden{
             display: none;
         }
@@ -60,8 +65,8 @@
         
 </head>
 <body>
-    <div id="counter"></div>
     <input type="text" id="search" name="search" required  minlength="4">
+    <div id="counter"></div>
     {{range .Questions}}
         <div class="question">
             <div class="question-text">{{.QuestionText}}</div>
@@ -94,9 +99,17 @@
                 parent.classList.remove('visible');
                 parent.classList.add('hidden');
             });
+            updateCounter();
         });
     </script> 
-
+    <script>
+        let counter = document.getElementById("counter");
+        function updateCounter(){
+            
+            counter.innerText = "Найдено:" + Array.from( document.getElementsByClassName("question") ).filter((div) => !div.classList.contains("hidden")).length;
+        }
+        updateCounter();
+    </script>
     <script>
         function btnClicked(){
             searchInput.value = "";
@@ -105,6 +118,7 @@
                 parent.classList.remove('hidden');
                 parent.classList.add('visible');
             });
+            updateCounter();
             window.scrollTo(0, 0);
         }
     </script>
