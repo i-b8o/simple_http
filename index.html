@@ -16,6 +16,24 @@
         p {
             margin-bottom: 2px;
         }
+        button {
+            position: fixed;
+            bottom: 1vw;
+            right: 1vw;
+            border-radius: 50%;
+            height: 10vw;
+            width: 10vw;
+            background-color: #0084ff;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        button>svg{
+            width: 5vw;
+            height: 5vw;
+            fill: white;
+        }
         .question {
             background-color: #eaeaea;
             border: 1px solid #e2e2e2;
@@ -42,8 +60,8 @@
         
 </head>
 <body>
+    <div id="counter"></div>
     <input type="text" id="search" name="search" required  minlength="4">
-    <!-- <div id="prompt"></div> -->
     {{range .Questions}}
         <div class="question">
             <div class="question-text">{{.QuestionText}}</div>
@@ -55,57 +73,40 @@
             <p>Ответ:</p>
             <div class="answer">{{.AnswerText}}</div>
         </div>
+    <button type="button" onclick="btnClicked()">
+        <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M810.65984 170.65984q18.3296 0 30.49472 12.16512t12.16512 30.49472q0 18.00192-12.32896 30.33088l-268.67712 268.32896 268.67712 268.32896q12.32896 12.32896 12.32896 30.33088 0 18.3296-12.16512 30.49472t-30.49472 12.16512q-18.00192 0-30.33088-12.32896l-268.32896-268.67712-268.32896 268.67712q-12.32896 12.32896-30.33088 12.32896-18.3296 0-30.49472-12.16512t-12.16512-30.49472q0-18.00192 12.32896-30.33088l268.67712-268.32896-268.67712-268.32896q-12.32896-12.32896-12.32896-30.33088 0-18.3296 12.16512-30.49472t30.49472-12.16512q18.00192 0 30.33088 12.32896l268.32896 268.67712 268.32896-268.67712q12.32896-12.32896 30.33088-12.32896z"  /></svg>
+    </button>
     {{end}}
     <script>
         let searchInputFocused = false;
-        // let prompt = document.getElementById("prompt");
         let questions = Array.from( document.getElementsByClassName("question-text") );
         let searchInput = document.getElementById("search");
-        // let wordSet = new Set();
-        // let promptChilds = [];
         searchInput.addEventListener('input', function (evt) {
             let regexp = new RegExp('^'+this.value, 'i');
             let search = this.value;
-            // let spaceLast = new RegExp(/\s+\S*$/);
-            // if (spaceLast.test(this.value)){
-            //     while (prompt.firstChild) {
-            //         prompt.firstChild.remove()
-
-            //     }
-
-            // }
             questions.map(function(q) {
                 let parent = q.parentElement;
                 if (regexp.test(q.innerText) || regexp == "^"){
                     parent.classList.remove('hidden');
                     parent.classList.add('visible');
-
-                    // let wordsSlice = q.innerText.split(" ");
-
-                    // console.log(search, typeof(search));
-                    // let searchWordsNum = search.split(" ").length;
-
-                    // wordSet.add(wordsSlice[searchWordsNum]);
-
-
-                    // if (regexp == "^"){
-                    //     wordSet.clear();
-                    //     promptChilds = [];
-                    // }
                     return;
                 }
                 parent.classList.remove('visible');
                 parent.classList.add('hidden');
             });
-            // for (let word of wordSet) {
-            //     let div = document.createElement("div");
-            //     div.innerText = word+"1";
-            //     prompt.appendChild(div);
-            // }
-            // wordSet.clear();
         });
-
-
     </script> 
+
+    <script>
+        function btnClicked(){
+            searchInput.value = "";
+            questions.map(function(q) {
+                let parent = q.parentElement;
+                parent.classList.remove('hidden');
+                parent.classList.add('visible');
+            });
+            window.scrollTo(0, 0);
+        }
+    </script>
 </body>
 </html>
